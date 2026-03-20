@@ -1,114 +1,379 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Princess English — ベルと英語練習</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --pink: #D4537E; --pink-dark: #993556; --pink-light: #FBEAF0;
-            --pink-border: #ED93B1; --blue-bg: #E6F1FB; --blue-text: #0C447C;
-            --bg: #f9f7f5; --surface: #ffffff; --surface2: #f3f0ed;
-            --border: rgba(0,0,0,0.1); --text: #1a1a1a; --text2: #6b6b6b;
-            --radius: 12px; --radius-sm: 8px;
-        }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-        .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-        .logo { font-size: 18px; font-weight: 600; }
-        .logo span { color: var(--pink); }
-        .princess-bar { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1.25rem; margin-bottom: 1rem; }
-        .p-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--pink-light); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-        .p-name { font-size: 15px; font-weight: 600; }
-        .chat-area { background: var(--surface2); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; min-height: 200px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
-        .bubble { padding: 10px 14px; border-radius: var(--radius); font-size: 14px; line-height: 1.6; max-width: 85%; }
-        .belle { align-self: flex-start; background: var(--surface); border: 0.5px solid var(--border); border-radius: 4px 12px 12px 12px; }
-        .player { align-self: flex-end; background: var(--pink); color: white; border-radius: 12px 4px 12px 12px; }
-        .builder { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
-        .input-row { display: flex; gap: 8px; margin-top: 15px; }
-        input { flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); outline: none; }
-        button { padding: 10px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; }
-        button:disabled { opacity: 0.5; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Princess English — ディズニーランド英語練習</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --pink: #D4537E;
+    --pink-dark: #993556;
+    --pink-light: #FBEAF0;
+    --pink-border: #ED93B1;
+    --blue-bg: #E6F1FB;
+    --blue-text: #0C447C;
+    --blue-border: #85B7EB;
+    --blue-sel: #378ADD;
+    --green-bg: #EAF3DE;
+    --green-text: #27500A;
+    --green-border: #97C459;
+    --green-sel: #639922;
+    --bg: #f9f7f5;
+    --surface: #ffffff;
+    --surface2: #f3f0ed;
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a1a;
+    --text2: #6b6b6b;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .logo { font-size: 18px; font-weight: 600; }
+  .logo span { color: var(--pink); }
+  .princess-bar { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1.25rem; margin-bottom: 1rem; }
+  .p-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--pink-light); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .p-name { font-size: 15px; font-weight: 600; }
+  .p-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .score-area { margin-left: auto; text-align: right; }
+  .score-val { font-size: 22px; font-weight: 600; color: var(--pink); }
+  .score-label { font-size: 10px; color: var(--text2); }
+  .scene-tag { display: inline-block; background: var(--pink-light); color: var(--pink-dark); font-size: 11px; padding: 4px 12px; border-radius: 100px; margin-bottom: 0.75rem; font-weight: 500; }
+  .chat-area { background: var(--surface2); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; min-height: 180px; display: flex; flex-direction: column; gap: 10px; max-height: 340px; overflow-y: auto; scroll-behavior: smooth; }
+  .bwrap { display: flex; flex-direction: column; }
+  .bwrap.belle { align-items: flex-start; }
+  .bwrap.player { align-items: flex-end; }
+  .bname { font-size: 11px; color: var(--text2); margin-bottom: 3px; padding: 0 4px; }
+  .bubble { padding: 10px 14px; border-radius: var(--radius); font-size: 14px; line-height: 1.65; max-width: 88%; display: flex; align-items: flex-start; gap: 8px; }
+  .belle .bubble { background: var(--surface); border: 0.5px solid var(--border); border-radius: 4px 12px 12px 12px; }
+  .player .bubble { background: var(--pink); color: white; border-radius: 12px 4px 12px 12px; }
+  .play-btn { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; font-size: 10px; background: var(--pink-light); color: var(--pink-dark); padding: 0; margin-top: 2px; }
+  .player .play-btn { background: rgba(255,255,255,0.25); color: white; }
+  .play-btn:hover { opacity: 0.75; }
+  .divider { border: none; border-top: 0.5px dashed var(--border); margin: 4px 0; }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink-border); animation: blink 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0.2}40%{opacity:1} }
+  .builder { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .builder-label { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+  .sentence-display { display: flex; gap: 6px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .word-slot { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .slot-label { font-size: 10px; color: var(--text2); }
+  .slot-word { padding: 7px 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; min-width: 68px; text-align: center; border: 0.5px solid; cursor: pointer; transition: opacity 0.1s; }
+  .slot-word:hover { opacity: 0.75; }
+  .slot-word.empty { color: var(--text2); border-color: var(--border); border-style: dashed; background: var(--surface2); font-weight: 400; font-size: 12px; cursor: default; }
+  .slot-word.empty:hover { opacity: 1; }
+  .slot-word.filled.subject { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+  .slot-word.filled.verb { background: var(--pink-light); color: var(--pink-dark); border-color: var(--pink-border); }
+  .slot-word.filled.object { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+  .plus { color: var(--text2); font-size: 16px; padding-top: 18px; }
+  .period { font-size: 20px; color: var(--text2); padding-top: 18px; }
+  .step-section { margin-bottom: 10px; }
+  .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .step-num { width: 18px; height: 18px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+  .step-num.subject { background: var(--blue-bg); color: var(--blue-text); }
+  .step-num.verb { background: var(--pink-light); color: var(--pink-dark); }
+  .step-num.object { background: var(--green-bg); color: var(--green-text); }
+  .step-title { font-size: 12px; font-weight: 600; }
+  .step-title .jp { font-size: 11px; font-weight: 400; color: var(--text2); margin-left: 4px; }
+  .chips-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .wchip { padding: 5px 12px; border-radius: 100px; font-size: 12px; cursor: pointer; border: 0.5px solid; transition: all 0.12s; font-family: inherit; }
+  .wchip.subject { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+  .wchip.subject:hover, .wchip.subject.sel { background: var(--blue-sel); color: white; border-color: var(--blue-sel); }
+  .wchip.verb { background: var(--pink-light); color: var(--pink-dark); border-color: var(--pink-border); }
+  .wchip.verb:hover, .wchip.verb.sel { background: var(--pink); color: white; border-color: var(--pink); }
+  .wchip.object { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+  .wchip.object:hover, .wchip.object.sel { background: var(--green-sel); color: white; border-color: var(--green-sel); }
+  .action-row { display: flex; gap: 8px; margin-top: 12px; }
+  .send-btn { flex: 1; padding: 12px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; font-family: inherit; font-weight: 500; transition: background 0.15s; }
+  .send-btn:hover:not(:disabled) { background: var(--pink-dark); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .clear-btn { padding: 12px 14px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); cursor: pointer; font-size: 12px; color: var(--text2); font-family: inherit; }
+  .clear-btn:hover { background: var(--surface); }
+  .mic-btn { width: 44px; height: 44px; border-radius: 50%; border: 0.5px solid var(--border); background: var(--surface2); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mic-btn.recording { background: #FCEBEB; border-color: #E24B4A; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.55} }
+  .voice-status { font-size: 11px; color: var(--text2); text-align: center; min-height: 16px; margin-top: 6px; }
+  .voice-status.on { color: #E24B4A; }
+  .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 100px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">Princess<span>English</span></div>
-        </div>
+<div class="container">
+  <div class="header">
+    <div class="logo">Princess<span>English</span></div>
+  </div>
 
-        <div class="princess-bar">
-            <div class="p-avatar">🌹</div>
-            <div>
-                <div class="p-name">Belle</div>
-                <div style="font-size: 12px; color: var(--text2);">Reading in the library</div>
-            </div>
-        </div>
-
-        <div id="chat-area" class="chat-area">
-            <div class="bubble belle">Bonjour! I am Belle. It's a wonderful day to learn English together, isn't it?</div>
-        </div>
-
-        <div class="builder">
-            <div style="font-size: 12px; color: var(--text2); margin-bottom: 10px;">Message to Belle:</div>
-            <div class="input-row">
-                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
-                <button id="send-btn">Send</button>
-            </div>
-        </div>
+  <div class="princess-bar">
+    <div class="p-avatar">👸</div>
+    <div>
+      <div class="p-name">Princess Belle</div>
+      <div class="p-sub" id="p-sub">from the Enchanted Castle</div>
     </div>
+    <div class="score-area">
+      <div class="score-val" id="score-val">0</div>
+      <div class="score-label">会話数</div>
+    </div>
+  </div>
 
-    <script>
-        const chatArea = document.getElementById('chat-area');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
+  <div id="scene-tag" class="scene-tag">🏰 どこから来たの？</div>
+  <div class="chat-area" id="chat-area"></div>
 
-        let chatHistory = [
-            { role: 'assistant', content: 'Bonjour! I am Belle. It\'s a wonderful day to learn English together, isn\'t it?' }
-        ];
+  <div class="builder">
+    <div class="builder-label">タップして文を作ろう — 主語・動詞・目的語の3語を選んで送信！</div>
+    <div class="sentence-display">
+      <div class="word-slot">
+        <div class="slot-label">主語</div>
+        <div class="slot-word empty" id="slot-s" onclick="clearSlot('s')">だれが</div>
+      </div>
+      <div class="plus">+</div>
+      <div class="word-slot">
+        <div class="slot-label">動詞</div>
+        <div class="slot-word empty" id="slot-v" onclick="clearSlot('v')">する</div>
+      </div>
+      <div class="plus">+</div>
+      <div class="word-slot">
+        <div class="slot-label">目的語</div>
+        <div class="slot-word empty" id="slot-o" onclick="clearSlot('o')">なにを</div>
+      </div>
+      <div class="period">.</div>
+    </div>
+    <div class="step-section">
+      <div class="step-header"><div class="step-num subject">1</div><div class="step-title">主語<span class="jp">だれが？</span></div></div>
+      <div class="chips-row" id="chips-s"></div>
+    </div>
+    <div class="step-section">
+      <div class="step-header"><div class="step-num verb">2</div><div class="step-title">動詞<span class="jp">何をする？</span></div></div>
+      <div class="chips-row" id="chips-v"></div>
+    </div>
+    <div class="step-section">
+      <div class="step-header"><div class="step-num object">3</div><div class="step-title">目的語<span class="jp">何を・誰を？</span></div></div>
+      <div class="chips-row" id="chips-o"></div>
+    </div>
+    <div class="action-row">
+      <button class="clear-btn" onclick="clearAll()">リセット</button>
+      <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
+      <button class="send-btn" id="send-btn" onclick="doSend()" disabled>Belleに送る →</button>
+    </div>
+    <div class="voice-status" id="voice-status"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
+<script>
+const allScenes = [
+  { tag:"🏰 どこから来たの？",
+    greeting:"Did you travel far to visit me today? Where are you from?",
+    s:["I","We","My family","My town"], v:["came from","live in","love","left"], o:["Japan","Tokyo","Osaka","far away","a warm place","home"] },
+  { tag:"💛 好きなもの",
+    greeting:"Tell me — what do you love most in the whole world?",
+    s:["I","We","My dream","My dog"], v:["love","like","adore","want","need"], o:["you","Belle","books","magic","Disney","adventure","singing","flowers","cake"] },
+  { tag:"📸 写真・サイン",
+    greeting:"Is there something special you would like from me today?",
+    s:["I","We","My friend","My sister"], v:["want","love","need","wish for"], o:["a photo","a picture","your autograph","a hug","your sign","a selfie","your magic"] },
+  { tag:"🌹 ドレス・見た目",
+    greeting:"Oh my, what a wonderful day! Do you like my gown?",
+    s:["Your dress","This castle","Your rose","Belle"], v:["is","looks","smells","shines like"], o:["beautiful","amazing","so pretty","a dream","pure gold","wonderful","magical"] },
+  { tag:"📚 本・夢",
+    greeting:"I was just reading the most wonderful book! Do you like reading?",
+    s:["I","Books","My dream","Stories"], v:["love","need","open","carry"], o:["adventure","magic","far away worlds","hope","new ideas","this book","your heart"] },
+];
 
-            addBubble(text, 'player');
-            userInput.value = '';
-            chatHistory.push({ role: 'user', content: text });
-            sendBtn.disabled = true;
+let cur = 0, sel = {s:null,v:null,o:null};
+let recognition = null, isRecording = false, waitingReply = false, score = 0;
+let lastSceneIdx = -1;
+const synth = window.speechSynthesis;
 
-            try {
-                // Gemini対応のサーバーへリクエスト
-                const response = await fetch('/api/belle', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ history: chatHistory })
-                });
+// ★新しく追加：会話の履歴を保存するメモ帳
+let chatHistory = [];
 
-                if (!response.ok) throw new Error('Server Error');
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
 
-                const data = await response.json();
-                addBubble(data.reply, 'belle');
-                chatHistory.push({ role: 'assistant', content: data.reply });
+function getBelleVoice() {
+  const voices = synth.getVoices();
+  const pref = ['Samantha','Victoria','Karen','Moira','Fiona','Google UK English Female','Microsoft Zira'];
+  for (const n of pref) { const v = voices.find(v => v.name===n); if (v) return v; }
+  return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) || voices.find(v => v.lang.startsWith('en')) || null;
+}
 
-            } catch (error) {
-                console.error('Error:', error);
-                addBubble('Oh, something went wrong... Could you try again?', 'belle');
-            } finally {
-                sendBtn.disabled = false;
-            }
-        }
+function speak(text, onFinished) {
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.88; u.pitch=1.15;
+  const v = getBelleVoice(); if (v) u.voice = v;
+  u.onend = () => { setSub(''); if (onFinished) onFinished(); };
+  u.onerror = () => { setSub(''); if (onFinished) onFinished(); };
+  synth.speak(u);
+  setSub('talking');
+}
 
-        function addBubble(text, sender) {
-            const div = document.createElement('div');
-            div.className = `bubble ${sender}`;
-            div.textContent = text;
-            chatArea.appendChild(div);
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
+function setSub(state) {
+  document.getElementById('p-sub').textContent =
+    state==='talking' ? '話しています...' : state==='thinking' ? '考えています...' : 'from the Enchanted Castle';
+}
 
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-    </script>
+function addBubble(role, text, autoSpeak) {
+  const area = document.getElementById('chat-area');
+  const wrap = document.createElement('div'); wrap.className='bwrap '+(role==='belle'?'belle':'player');
+  const nm = document.createElement('div'); nm.className='bname'; nm.textContent=role==='belle'?'Princess Belle':'You';
+  const bub = document.createElement('div'); bub.className='bubble';
+  const sp = document.createElement('span'); sp.textContent=text;
+  const pb = document.createElement('button'); pb.className='play-btn'; pb.textContent='▶'; pb.title='もう一度聞く';
+  pb.onclick = () => speak(text);
+  bub.appendChild(sp); bub.appendChild(pb);
+  wrap.appendChild(nm); wrap.appendChild(bub);
+  area.appendChild(wrap); area.scrollTop = area.scrollHeight;
+  if (autoSpeak) speak(text);
+}
+
+function showTyping() {
+  const area = document.getElementById('chat-area');
+  const wrap = document.createElement('div'); wrap.className='bwrap belle'; wrap.id='typing-bubble';
+  const nm = document.createElement('div'); nm.className='bname'; nm.textContent='Princess Belle';
+  const bub = document.createElement('div'); bub.className='bubble';
+  bub.innerHTML='<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  wrap.appendChild(nm); wrap.appendChild(bub);
+  area.appendChild(wrap); area.scrollTop = area.scrollHeight;
+}
+
+function removeTyping() { const el=document.getElementById('typing-bubble'); if(el) el.remove(); }
+
+// ★修正：履歴をサーバーに送るように変更
+async function doSend(overrideText) {
+  const sentence = overrideText || (sel.s+' '+sel.v+' '+sel.o+'.');
+  
+  // 自分の発言を履歴に追加
+  chatHistory.push({ role: "user", content: sentence });
+  
+  addBubble('player', sentence, false);
+  clearAll();
+  waitingReply = true; checkReady();
+  showTyping(); setSub('thinking');
+  
+  score++; document.getElementById('score-val').textContent = score;
+
+  try {
+    const res = await fetch('/api/belle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ history: chatHistory }) // 履歴を全部送る
+    });
+    
+    if (!res.ok) throw new Error('Server error');
+    const data = await res.json();
+    const reply = data.reply;
+
+    // ベルの返信も履歴に追加
+    chatHistory.push({ role: "assistant", content: reply });
+
+    removeTyping(); waitingReply = false;
+    addBubble('belle', reply, false);
+    speak(reply); // 会話を続けるため、自動でシーン移動しないように変更
+    checkReady();
+    
+  } catch(e) {
+    removeTyping(); setSub(''); waitingReply = false; checkReady();
+    showToast('エラーが発生しました。サーバーを確認してください。');
+  }
+}
+
+function pickNextScene() {
+  let idx;
+  do { idx = Math.floor(Math.random() * allScenes.length); } while (idx===lastSceneIdx);
+  lastSceneIdx = idx;
+  return idx;
+}
+
+function loadScene(idx, isFirst) {
+  cur = idx;
+  const sc = allScenes[idx];
+  document.getElementById('scene-tag').textContent = sc.tag;
+  
+  // シーンが変わる時に履歴をリセット（新しい話題にするため）
+  chatHistory = [{ role: "assistant", content: sc.greeting }];
+  
+  sel={s:null,v:null,o:null};
+  ['s','v','o'].forEach(t => {
+    const el=document.getElementById('slot-'+t);
+    el.className='slot-word empty';
+    el.textContent=t==='s'?'だれが':t==='v'?'する':'なにを';
+  });
+  renderChips(); checkReady();
+  if (!isFirst) {
+    const hr = document.createElement('hr'); hr.className='divider';
+    document.getElementById('chat-area').appendChild(hr);
+  }
+  addBubble('belle', sc.greeting, true);
+}
+
+function renderChips() {
+  const sc = allScenes[cur];
+  ['s','v','o'].forEach(t => {
+    const cls = t==='s'?'subject':t==='v'?'verb':'object';
+    const container = document.getElementById('chips-'+t);
+    container.innerHTML='';
+    sc[t].forEach(w => {
+      const chip = document.createElement('button'); chip.className='wchip '+cls; chip.textContent=w;
+      if (sel[t]===w) chip.classList.add('sel');
+      chip.onclick = () => {
+        sel[t]=w;
+        const slot=document.getElementById('slot-'+t);
+        slot.textContent=w; slot.className='slot-word filled '+cls;
+        renderChips(); checkReady();
+      };
+      container.appendChild(chip);
+    });
+  });
+}
+
+function clearSlot(t) {
+  if (!sel[t]) return;
+  sel[t]=null;
+  const el=document.getElementById('slot-'+t);
+  el.className='slot-word empty';
+  el.textContent=t==='s'?'だれが':t==='v'?'する':'なにを';
+  renderChips(); checkReady();
+}
+
+function clearAll() { ['s','v','o'].forEach(t => clearSlot(t)); }
+
+function checkReady() {
+  document.getElementById('send-btn').disabled = !(sel.s && sel.v && sel.o) || waitingReply;
+}
+
+function setupRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR();
+  r.lang='en-US'; r.continuous=false; r.interimResults=false;
+  r.onstart = () => { isRecording=true; document.getElementById('mic-btn').classList.add('recording'); setVS('聞いています...', true); };
+  r.onresult = (e) => { const t=e.results[0][0].transcript; setVS('',false); doSend(t); };
+  r.onend = () => { isRecording=false; document.getElementById('mic-btn').classList.remove('recording'); };
+  r.onerror = () => { isRecording=false; document.getElementById('mic-btn').classList.remove('recording'); setVS('もう一度試してください', false); };
+  return r;
+}
+
+function toggleMic() {
+  if (!recognition) recognition=setupRecognition();
+  if (!recognition) { setVS('音声入力非対応', false); return; }
+  if (isRecording) { recognition.stop(); } else { try { recognition.start(); } catch(e){} }
+}
+
+function setVS(msg, on) {
+  const el=document.getElementById('voice-status'); el.textContent=msg; el.className='voice-status'+(on?' on':'');
+}
+
+if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => {};
+loadScene(0, true);
+</script>
 </body>
 </html>
