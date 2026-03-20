@@ -339,7 +339,8 @@ async function doSend(overrideText) {
     const reply = await callBelle(sentence);
     removeTyping(); waitingReply=false;
     addBubble('belle', reply, false);
-    speak(reply, () => setTimeout(() => loadScene(pickNextScene(), false), 800));
+    setTimeout(() => loadScene(pickNextScene(), false), 4000);
+    speak(reply);
   } catch(e) {
     removeTyping(); setSub(''); waitingReply=false; checkReady();
     showToast('少し待ってもう一度送ってみてください。');
