@@ -1,0 +1,12 @@
+{
+  "name": "princess-english",
+  "version": "1.0.0",
+  "description": "ディズニーランド英語練習アプリ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
