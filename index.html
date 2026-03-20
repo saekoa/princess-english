@@ -5,39 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Princess English — ベルと英語練習</title>
     <style>
-        /* スタイルは元の素敵なデザインを維持しています */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --pink: #D4537E; --pink-dark: #993556; --pink-light: #FBEAF0;
-            --pink-border: #ED93B1; --bg: #f9f7f5; --surface: #ffffff;
-            --surface2: #f3f0ed; --border: rgba(0,0,0,0.1);
-            --text: #1a1a1a; --text2: #6b6b6b; --radius: 12px;
+            --pink-border: #ED93B1; --blue-bg: #E6F1FB; --blue-text: #0C447C;
+            --bg: #f9f7f5; --surface: #ffffff; --surface2: #f3f0ed;
+            --border: rgba(0,0,0,0.1); --text: #1a1a1a; --text2: #6b6b6b;
+            --radius: 12px; --radius-sm: 8px;
         }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .chat-area { background: var(--surface2); border-radius: var(--radius); padding: 15px; height: 400px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 14px; line-height: 1.5; }
-        .belle { align-self: flex-start; background: white; border: 1px solid var(--border); }
-        .player { align-self: flex-end; background: var(--pink); color: white; }
-        .input-area { display: flex; gap: 10px; }
-        input { flex: 1; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); outline: none; }
-        button { padding: 10px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius); cursor: pointer; font-weight: bold; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .logo { font-size: 18px; font-weight: 600; }
+        .logo span { color: var(--pink); }
+        .princess-bar { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1.25rem; margin-bottom: 1rem; }
+        .p-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--pink-light); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+        .p-name { font-size: 15px; font-weight: 600; }
+        .chat-area { background: var(--surface2); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; min-height: 200px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+        .bubble { padding: 10px 14px; border-radius: var(--radius); font-size: 14px; line-height: 1.6; max-width: 85%; }
+        .belle { align-self: flex-start; background: var(--surface); border: 0.5px solid var(--border); border-radius: 4px 12px 12px 12px; }
+        .player { align-self: flex-end; background: var(--pink); color: white; border-radius: 12px 4px 12px 12px; }
+        .builder { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+        .input-row { display: flex; gap: 8px; margin-top: 15px; }
+        input { flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); outline: none; }
+        button { padding: 10px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; }
         button:disabled { opacity: 0.5; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header style="margin-bottom: 20px; text-align: center;">
-            <h1 style="font-size: 20px; color: var(--pink);">🌹 Princess English with Belle</h1>
-        </header>
-
-        <div id="chat-area" class="chat-area">
-            <div class="bubble belle">Bonjour! I am Belle. Would you like to read a book with me?</div>
+        <div class="header">
+            <div class="logo">Princess<span>English</span></div>
         </div>
 
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Type in English..." autocomplete="off">
-            <button id="send-btn">Send</button>
+        <div class="princess-bar">
+            <div class="p-avatar">🌹</div>
+            <div>
+                <div class="p-name">Belle</div>
+                <div style="font-size: 12px; color: var(--text2);">Reading in the library</div>
+            </div>
+        </div>
+
+        <div id="chat-area" class="chat-area">
+            <div class="bubble belle">Bonjour! I am Belle. It's a wonderful day to learn English together, isn't it?</div>
+        </div>
+
+        <div class="builder">
+            <div style="font-size: 12px; color: var(--text2); margin-bottom: 10px;">Message to Belle:</div>
+            <div class="input-row">
+                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button id="send-btn">Send</button>
+            </div>
         </div>
     </div>
 
@@ -46,49 +64,38 @@
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
 
-        // 会話履歴を保持する配列
         let chatHistory = [
-            { role: 'assistant', content: 'Bonjour! I am Belle. Would you like to read a book with me?' }
+            { role: 'assistant', content: 'Bonjour! I am Belle. It\'s a wonderful day to learn English together, isn\'t it?' }
         ];
 
         async function sendMessage() {
             const text = userInput.value.trim();
             if (!text) return;
 
-            // プレイヤーのメッセージを表示
             addBubble(text, 'player');
             userInput.value = '';
-            
-            // 履歴に追加
             chatHistory.push({ role: 'user', content: text });
-
-            // 送信中はボタンを無効化
             sendBtn.disabled = true;
 
             try {
-                // Renderのサーバーに送信
+                // Gemini対応のサーバーへリクエスト
                 const response = await fetch('/api/belle', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ history: chatHistory }) // サーバーが期待する形式
+                    body: JSON.stringify({ history: chatHistory })
                 });
 
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('Server Error');
 
                 const data = await response.json();
-                
-                // ベルの返信を表示
                 addBubble(data.reply, 'belle');
-                
-                // 履歴に追加
                 chatHistory.push({ role: 'assistant', content: data.reply });
 
             } catch (error) {
                 console.error('Error:', error);
-                addBubble('Sorry, I feel a bit tired... (サーバーエラーが発生しました)', 'belle');
+                addBubble('Oh, something went wrong... Could you try again?', 'belle');
             } finally {
                 sendBtn.disabled = false;
-                chatArea.scrollTop = chatArea.scrollHeight;
             }
         }
 
@@ -101,9 +108,7 @@
         }
 
         sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
