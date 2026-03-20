@@ -42,6 +42,7 @@ async function callGemini(history) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'generativelanguage.googleapis.com',
+      // ここを「gemini-1.5-flash-latest」に変更します
       path: `/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
