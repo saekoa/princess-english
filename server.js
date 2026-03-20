@@ -63,19 +63,16 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const { history } = JSON.parse(body);
-        
-        // ログにメッセージを表示（確認用）
-        console.log("Received history:", JSON.stringify(history));
+        console.log("Received history count:", history.length);
 
-        // AIを呼び出す（ここは以前のままでもOKですが、エラー回避のため確実に書きます）
-        const reply = await callAnthropic(history); 
+        const reply = await callAnthropic(history);
         
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ reply: reply }));
       } catch(e) {
-        res.end(JSON.stringify({ reply }));
-      } catch(e) {
-        res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
+        console.error("API Error:", e.message);
+        res.writeHead(500); 
+        res.end(JSON.stringify({ error: e.message }));
       }
     });
     return;
@@ -84,14 +81,18 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET') {
     const filePath = path.join(__dirname, 'index.html');
     fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        res.end("Not Found");
+        return;
+      }
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(data);
     });
   }
 });
 
-// ★ここが重要：Renderでは PORT 環境変数と '0.0.0.0' の指定が必須です
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
