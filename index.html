@@ -214,13 +214,13 @@ function getBelleVoice() {
   return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) || voices.find(v => v.lang.startsWith('en')) || null;
 }
 
-function speak(text) {
+function speak(text, onFinished) {
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang='en-US'; u.rate=0.88; u.pitch=1.15;
   const v = getBelleVoice(); if (v) u.voice = v;
-  u.onend = () => setSub('');
-  u.onerror = () => setSub('');
+  u.onend = () => { setSub(''); if (onFinished) onFinished(); };
+  u.onerror = () => { setSub(''); if (onFinished) onFinished(); };
   synth.speak(u);
   setSub('talking');
 }
@@ -338,8 +338,8 @@ async function doSend(overrideText) {
   try {
     const reply = await callBelle(sentence);
     removeTyping(); waitingReply=false;
-    addBubble('belle', reply, true);
-    setTimeout(() => loadScene(pickNextScene(), false), 3500);
+    addBubble('belle', reply, false);
+    speak(reply, () => setTimeout(() => loadScene(pickNextScene(), false), 800));
   } catch(e) {
     removeTyping(); setSub(''); waitingReply=false; checkReady();
     showToast('サーバーに接続できません。server.js が起動しているか確認してください。');
