@@ -262,10 +262,10 @@ async function doSend(overrideText) {
   score++; document.getElementById('score-val').textContent = score;
 
   try {
-    const res = await fetch('/api/belle', {
+    const response = await fetch('/api/belle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ history: chatHistory }) // 履歴を全部送る
+      body: JSON.stringify({ history: chatHistory }) // ← 'history' として送るのが正解
     });
     
     if (!res.ok) throw new Error('Server error');
