@@ -75,11 +75,13 @@ const server = http.createServer(async (req, res) => {
       try {
         const { message } = JSON.parse(body);
         console.log('Received message:', message);
+        console.log('Reply:', reply.substring(0, 50));
         const reply = await callAnthropic(message);
         console.log('Got reply:', reply.substring(0, 50));
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ reply }));
       } catch(e) {
+        console.error('Error:', e.message);
         console.error('Error:', e.message);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: e.message }));
