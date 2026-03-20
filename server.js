@@ -63,8 +63,16 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const { history } = JSON.parse(body);
-        const reply = await callAnthropic(history);
+        
+        // ログにメッセージを表示（確認用）
+        console.log("Received history:", JSON.stringify(history));
+
+        // AIを呼び出す（ここは以前のままでもOKですが、エラー回避のため確実に書きます）
+        const reply = await callAnthropic(history); 
+        
         res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ reply: reply }));
+      } catch(e) {
         res.end(JSON.stringify({ reply }));
       } catch(e) {
         res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
